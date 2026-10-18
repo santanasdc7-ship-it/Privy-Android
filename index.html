@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#10131c">
+<meta name="description" content="Privy — comunicação com privacidade em primeiro lugar.">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/privy.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/privy.svg">
+<title>Privy — Protótipo</title>
+<style>
+:root{--bg:#10131c;--panel:#1b2030;--panel2:#252b3d;--text:#f5f6ff;--muted:#aab2c7;--purple:#7563f5;--mint:#75e2bd;--line:#343b50}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+button,input{font:inherit}button{cursor:pointer}
+.app{max-width:520px;min-height:100dvh;margin:auto;display:flex;flex-direction:column;background:var(--bg)}
+header{display:flex;align-items:center;gap:11px;padding:18px 17px;border-bottom:1px solid var(--line);position:sticky;top:0;background:rgba(16,19,28,.96);z-index:2}
+.logo{width:42px;height:42px;border-radius:14px;background:var(--purple);display:grid;place-items:center;font-size:22px}
+.brand{font-size:21px;font-weight:800;letter-spacing:.2px}.tagline{font-size:12px;color:var(--muted)}
+.profile{margin-left:auto;border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:50%;width:40px;height:40px}
+main{padding:21px 16px 94px;flex:1}.eyebrow{color:var(--mint);font-size:12px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase}
+h1{font-size:27px;margin:5px 0 6px}p{line-height:1.5}.sub{color:var(--muted);margin:0 0 20px;font-size:14px}
+.search{width:100%;padding:13px 14px;border:1px solid var(--line);border-radius:14px;background:var(--panel);color:var(--text);outline:none;margin-bottom:14px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:15px;margin:10px 0}
+.item{display:flex;gap:12px;align-items:center;padding:13px 2px;border-bottom:1px solid var(--line)}.item:last-child{border-bottom:0}
+.avatar{width:47px;height:47px;flex-shrink:0;border-radius:50%;display:grid;place-items:center;background:#353052;color:#ded9ff;font-weight:800}
+.itemtext{min-width:0;flex:1}.itemtitle{font-weight:700}.preview{font-size:13px;color:var(--muted);margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tag{font-size:11px;color:var(--mint);border:1px solid #2b6757;padding:4px 7px;border-radius:999px;white-space:nowrap}
+.primary{border:0;border-radius:13px;background:var(--purple);color:white;padding:12px 15px;font-weight:700;width:100%;margin-top:8px}
+.secondary{border:1px solid var(--line);border-radius:12px;background:var(--panel2);color:var(--text);padding:10px 12px}
+.nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(520px,100%);display:grid;grid-template-columns:repeat(3,1fr);gap:6px;padding:10px 12px calc(10px + env(safe-area-inset-bottom));background:#171b27;border-top:1px solid var(--line);z-index:3}
+.nav button{border:0;background:transparent;color:var(--muted);padding:9px 3px;border-radius:12px;font-size:12px}.nav button.active{background:#302a52;color:#e2ddff}.nav span{display:block;font-size:20px;margin-bottom:3px}
+.row{display:flex;align-items:center;gap:12px}.grow{flex:1}.setting{padding:13px 0;border-bottom:1px solid var(--line)}.setting:last-child{border:0}
+.switch{accent-color:var(--purple);width:20px;height:20px}
+.note{font-size:12px;color:var(--muted);background:#202536;border-radius:12px;padding:12px;line-height:1.5}
+.empty{text-align:center;padding:35px 12px}.empty .symbol{font-size:44px;color:var(--purple)}.empty h2{font-size:19px;margin:12px 0 5px}.empty p{font-size:14px;color:var(--muted);margin:0}
+input[type=text]{background:var(--bg);border:1px solid var(--line);border-radius:11px;padding:11px;color:var(--text);width:100%}
+.chatbox{display:flex;gap:8px;margin-top:12px}.chatbox input{flex:1;min-width:0}.chatbox button{background:var(--purple);border:0;border-radius:11px;color:white;padding:0 14px}
+.bubble{padding:10px 12px;border-radius:15px;margin:8px 0;max-width:85%;background:var(--panel2);font-size:14px}.mine{margin-left:auto;background:#42387b}
+small{color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="app">
+<header><div class="logo">♢</div><div><div class="brand">Privy</div><div class="tagline">Conecte-se. Com privacidade.</div></div><button class="profile" aria-label="Perfil" onclick="openProfile()">●</button></header>
+<main id="screen"></main>
+<nav class="nav">
+<button class="active" data-tab="chats" onclick="showTab('chats')"><span>☏</span>Conversas</button>
+<button data-tab="groups" onclick="showTab('groups')"><span>♧</span>Grupos</button>
+<button data-tab="privacy" onclick="showTab('privacy')"><span>⛨</span>Privacidade</button>
+</nav>
+</div>
+<script>
+let tab='chats', messages=[], profileName='Você', timerOn=false;
+function showTab(t){tab=t;document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.tab===t));render()}
+function render(){
+ const s=document.getElementById('screen');
+ if(tab==='chats'){s.innerHTML=`<div class="eyebrow">Seu espaço privado</div><h1>Conversas</h1><p class="sub">Um lugar para falar com mais tranquilidade.</p><input class="search" placeholder="⌕  Buscar conversas" oninput="filterChats(this.value)"><div id="chatlist"><div class="card"><div class="item" onclick="openDemoChat()"><div class="avatar">P</div><div class="itemtext"><div class="itemtitle">Conversa de demonstração</div><div class="preview">Toque para testar a interface</div></div><span class="tag">DEMO</span></div></div><div class="empty"><div class="symbol">⛨</div><h2>Privacidade em primeiro lugar</h2><p>Esta é uma demonstração local. Nenhuma mensagem é enviada pela internet.</p></div><button class="primary" onclick="openDemoChat()">Testar conversa</button></div>`}
+ if(tab==='groups'){s.innerHTML=`<div class="eyebrow">Juntos, com controle</div><h1>Grupos privados</h1><p class="sub">Organize conversas com as pessoas que você escolher.</p><div class="card"><div class="row"><div class="avatar">＋</div><div class="grow"><b>Criar um grupo</b><div class="preview">A criação real será adicionada numa próxima fase.</div></div></div><button class="primary" onclick="createGroupDemo()">Criar grupo de demonstração</button></div><div id="groupResult"></div><div class="note">No aplicativo final, apenas participantes autorizados poderão acessar cada grupo. Isso exigirá autenticação e regras de acesso no servidor.</div>`}
+ if(tab==='privacy'){s.innerHTML=`<div class="eyebrow">Você no controle</div><h1>Privacidade</h1><p class="sub">Escolha como deseja usar o Privy.</p><div class="card"><div class="setting row"><div class="grow"><b>Mensagens temporárias</b><div class="preview">Demonstração de uma preferência</div></div><input class="switch" type="checkbox" ${timerOn?'checked':''} onchange="timerOn=this.checked;render()"></div><div class="setting"><b>Bloqueio de contatos</b><div class="preview">Será implementado com contas reais.</div></div><div class="setting"><b>Criptografia</b><div class="preview">Ainda não implementada neste protótipo.</div></div><div class="setting"><b>Excluir conta e dados</b><div class="preview">Será disponibilizado na versão conectada.</div></div></div><div class="note">Aviso honesto: esta versão não oferece criptografia de ponta a ponta, não possui servidor de mensagens e não apaga mensagens remotamente. Não use dados sensíveis no protótipo.</div>`}
+}
+function filterChats(q){let el=document.querySelector('#chatlist');if(el)el.style.display='conversa de demonstração'.includes(q.toLowerCase())||!q?'block':'none'}
+function openDemoChat(){document.getElementById('screen').innerHTML=`<button class="secondary" onclick="showTab('chats')">← Voltar</button><h1 style="margin-top:18px">Conversa de demonstração</h1><p class="sub">Somente neste aparelho • Sem envio real</p><div class="card" id="messages"><div class="bubble">Olá! Esta é uma conversa de teste do Privy.</div></div><form class="chatbox" onsubmit="sendDemo(event)"><input id="msg" type="text" placeholder="Digite uma mensagem de teste" maxlength="300" required><button>Enviar</button></form><p class="note">As mensagens ficam apenas nesta tela e podem desaparecer ao sair. Não são transmitidas.</p>`}
+function sendDemo(e){e.preventDefault();let input=document.getElementById('msg');let box=document.getElementById('messages');let b=document.createElement('div');b.className='bubble mine';b.textContent=input.value;box.appendChild(b);input.value='';box.scrollTop=box.scrollHeight}
+function createGroupDemo(){document.getElementById('groupResult').innerHTML=`<div class="card"><b>Grupo de teste criado nesta tela</b><p class="preview">Ainda não existe um grupo real nem convite para outros usuários.</p><button class="secondary" onclick="this.parentElement.remove()">Fechar</button></div>`}
+function openProfile(){document.getElementById('screen').innerHTML=`<button class="secondary" onclick="showTab(tab)">← Voltar</button><h1 style="margin-top:18px">Seu perfil</h1><p class="sub">Perfil de demonstração, salvo somente nesta sessão.</p><div class="card"><label for="name">Nome de exibição</label><input id="name" type="text" value="${profileName.replaceAll('"','&quot;')}" maxlength="40"><button class="primary" onclick="profileName=document.getElementById('name').value||'Você';alert('Nome atualizado nesta demonstração.');showTab('chats')">Salvar nome</button></div>`}
+render();
+</script>
+<script>
+if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
+  window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js").catch(() => {}));
+}
+</script>
+</body>
+</html>

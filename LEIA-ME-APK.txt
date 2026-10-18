@@ -1,0 +1,34 @@
+PRIVY — PROJETO ANDROID PARA COMPILAÇÃO NA NUVEM
+
+O que este pacote contém:
+- Projeto Android nativo mínimo com WebView.
+- Interface atual do protótipo Privy embutida em app/src/main/assets/index.html.
+- GitHub Actions workflow para compilar um APK debug na nuvem.
+
+ATENÇÃO:
+- Este ZIP é o código-fonte do projeto, NÃO é um APK.
+- A interface é apenas demonstração local. Não tem contas reais, mensagens via internet,
+  grupos reais, chamadas, criptografia ponta a ponta nem exclusão remota de mensagens.
+- O APK debug não é uma versão pronta para publicação na Play Store.
+- A compilação depende de uma conta/repositório GitHub e execução do workflow na nuvem.
+
+COMO GERAR O APK SÓ COM O CELULAR:
+1. Baixe e extraia este ZIP usando o app Arquivos.
+2. Entre em https://github.com e crie uma conta, se ainda não tiver.
+3. Crie um repositório novo chamado privy-android. Pode ser privado.
+4. Use a interface web do GitHub para enviar os arquivos e pastas extraídos para a raiz
+   do repositório, mantendo a estrutura de diretórios.
+5. Abra a aba Actions do repositório.
+6. Se o GitHub pedir, habilite Actions para o repositório.
+7. Selecione "Build Privy APK" e toque em "Run workflow". Se o workflow não aparecer,
+   confirme que .github/workflows/build-apk.yml foi enviado no caminho correto.
+8. Aguarde o job terminar com sucesso.
+9. Abra a execução concluída e baixe o artifact "privy-debug-apk".
+10. Extraia o artifact ZIP; dentro estará app-debug.apk.
+11. Instale no Android somente se confiar no arquivo gerado. O Android poderá pedir
+    autorização para instalar apps dessa origem.
+
+OBSERVAÇÃO SOBRE O CELULAR:
+O envio de muitas pastas pelo site móvel pode ser inconveniente. Se ficar difícil,
+use a opção de upload de arquivos do GitHub no navegador em modo "Para computador".
+Não compartilhe tokens, senhas nem chaves secretas.

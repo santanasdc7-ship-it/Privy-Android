@@ -1,0 +1,22 @@
+{
+  "id": "./",
+  "name": "Privy — Comunicação Privada",
+  "short_name": "Privy",
+  "description": "Protótipo de interface de comunicação com foco em privacidade.",
+  "lang": "pt-BR",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#10131c",
+  "theme_color": "#10131c",
+  "prefer_related_applications": false,
+  "icons": [
+    {
+      "src": "icons/privy.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
